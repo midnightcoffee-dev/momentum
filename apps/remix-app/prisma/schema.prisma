@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id               String             @id @default(uuid())
+  email            String             @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  role             Role               @default(USER)
+  purchases        Purchase[]
+  CourseEnrollment CourseEnrollment[]
+}
+
+model CourseEnrollment {
+  id                    Int      @id @default(autoincrement())
+  userId                String
+  sanityCourseId        String // change courseId to sanityCourseId and make it String
+  user                  User     @relation(fields: [userId], references: [id])
+  stripePaymentIntentId String   @default("")
+  createdAt             DateTime @default(now())
+
+  @@index([userId])
+  @@index([sanityCourseId]) // update index
+}
+
+enum Role {
+  USER
+  INSTRUCTOR
+  ADMIN
+}
+
+model Purchase {
+  id             Int            @id @default(autoincrement())
+  userId         String
+  sanityCourseId String // change courseId to sanityCourseId and make it String
+  user           User           @relation(fields: [userId], references: [id])
+  createdAt      DateTime       @default(now())
+  pricePaid      Float
+  status         PurchaseStatus
+
+  @@index([userId])
+  @@index([sanityCourseId]) // update index
+}
+
+enum PurchaseStatus {
+  PENDING
+  SUCCESSFUL
+  FAILED
+}

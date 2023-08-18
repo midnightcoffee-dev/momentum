@@ -11,6 +11,9 @@ importers:
       '@turbo/gen':
         specifier: ^1.9.7
         version: 1.9.7(@types/node@17.0.45)(typescript@5.0.4)
+      dotenv-cli:
+        specifier: ^7.2.1
+        version: 7.2.1
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
